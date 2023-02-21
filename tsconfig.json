@@ -71,5 +71,10 @@
 		"suppressImplicitAnyIndexErrors": true
 	},
 	"include": ["src/**/*.ts", "src/**/*.vue", "src/**/*.tsx", "src/**/*.d.ts"], // **Represents any directory, and * represents any file. Indicates that all files in the src directory will be compiled
-	"exclude": ["node_modules", "dist"] // Indicates the file directory that does not need to be compiled
+	"exclude": ["node_modules", "dist"], // Indicates the file directory that does not need to be compiled
+	
+	/* 消除红色警告波浪线 */
+    	"vueCompilerOptions": {
+     "experimentalDisableTemplateSupport": true
+	},
 }
