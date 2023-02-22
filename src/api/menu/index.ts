@@ -12,19 +12,27 @@ import request from '/@/utils/request';
  */
 export function useMenuApi() {
 	return {
-		getAdminMenu: (params?: object) => {
+		getRoleMenu: (params?: object) => {
 			return request({
-				url: '/gitee/lyt-top/vue-next-admin-images/raw/master/menu/adminMenu.json',
+				url: '/api/base/role-menus',
 				method: 'get',
 				params,
 			});
 		},
-		getTestMenu: (params?: object) => {
-			return request({
-				url: '/gitee/lyt-top/vue-next-admin-images/raw/master/menu/testMenu.json',
-				method: 'get',
-				params,
-			});
-		},
+
+		// getAdminMenu: (params?: object) => {
+		// 	return request({
+		// 		url: '/gitee/lyt-top/vue-next-admin-images/raw/master/menu/adminMenu.json',
+		// 		method: 'get',
+		// 		params,
+		// 	});
+		// },
+		// getTestMenu: (params?: object) => {
+		// 	return request({
+		// 		url: '/gitee/lyt-top/vue-next-admin-images/raw/master/menu/testMenu.json',
+		// 		method: 'get',
+		// 		params,
+		// 	});
+		// },
 	};
 }
