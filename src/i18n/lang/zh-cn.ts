@@ -66,6 +66,7 @@ export default {
 		layoutLinkView: '外链',
 		layoutIframeViewOne: '内嵌 iframe1',
 		layoutIframeViewTwo: '内嵌 iframe2',
+		dashboard:'工作台',
 		SaaS: 'SaaS',
 		base: '基础资料',
 		book: '书籍管理',
