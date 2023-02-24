@@ -60,11 +60,11 @@ service.interceptors.response.use(
 			//const error = err.error = {}
 			switch (error.response.status) { // 判断后台返回的token值是否失效
 				case 401:
-					Session.clear(); // 清除浏览器全部临时缓存
-					window.location.href = '/'; // 去登录页
-					ElMessageBox.alert('你已被登出，请重新登录', '提示', {})
+					ElMessageBox.alert('登录已过期，请重新登录', '提示', {})
 						.then(() => { })
 						.catch(() => { });
+					Session.clear(); // 清除浏览器全部临时缓存
+					window.location.href = '/'; // 去登录页
 					break
 				case 400:
 					ElMessage.error(error.response.data.error.message);
