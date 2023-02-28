@@ -39,8 +39,8 @@ export async function initBackEndControlRoutes() {
 	if (window.nextLoading === undefined) NextLoading.start();
 	// 无 token 停止执行下一步
 	if (!Session.get('token')) return false;
-	// 触发初始化用户信息 pinia 配置用户权限
-	//await useUserInfo().setUserInfos();
+	
+	
 	// 获取路由菜单数据
 	var res = await request.get('/api/base/role-menus')
 	// 无登录权限时，添加判断
@@ -53,6 +53,8 @@ export async function initBackEndControlRoutes() {
 	await setAddRoute();
 	// 设置路由到 pinia routesList 中（已处理成多级嵌套路由）及缓存多级嵌套数组处理后的一维数组
 	await setFilterMenuAndCacheTagsViewRoutes();
+	// 获取用户按钮
+	await useUserInfo().setUserInfos();
 
 }
 
