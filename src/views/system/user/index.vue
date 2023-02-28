@@ -27,7 +27,7 @@
 						<el-form-item>
 							<el-button type="primary" icon="ele-Search" @click="handleQuery"> 查询
 							</el-button>
-							<el-button icon="ele-Plus" @click="handleCreate"> 新增 </el-button>
+							<el-button icon="ele-Plus" @click="handleCreate" v-auth="'AbpIdentity.Users.Create'"> 新增 </el-button>
 						</el-form-item>
 					</el-form>
 				</el-card>

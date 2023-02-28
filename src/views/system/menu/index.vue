@@ -13,7 +13,7 @@
 			</el-form>
 		</el-card>
 		<el-card shadow="hover" style="margin-top: 8px">
-			<el-table :data="state.list" v-loading="state.loading" style="width: 100%" row-key="path"
+			<el-table :data="state.data" v-loading="state.loading" style="width: 100%" row-key="path"
 				:tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
 				<el-table-column label="菜单名" prop="label" show-overflow-tooltip />
 				<el-table-column label="图标" prop="icon" show-overflow-tooltip />
@@ -30,13 +30,12 @@
 				</el-table-column>
 			</el-table>
 		</el-card>
-		<EditMenu ref="editMenuRef" @refresh="handleQuery()" :menuData="state.list" />
+		<EditMenu ref="editMenuRef" @refresh="handleQuery()" :menuData="state.data" />
 	</div>
 </template>
 
 <script setup lang="ts" name="menu">
 import { ref, onMounted, reactive } from 'vue';
-import { RouteRecordRaw } from 'vue-router';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { storeToRefs } from 'pinia';
 import { useRoutesList } from '/@/stores/routesList';
@@ -52,11 +51,7 @@ const stores = useRoutesList();
 const { routesList } = storeToRefs(stores);
 const editMenuRef = ref();
 const state = reactive({
-	tableData: {
-		data: [] as RouteRecordRaw[],
-		loading: true,
-	},
-	list: [],
+	data: [],
 	loading: false,
 	tableParams: {
 		Filter: "",
@@ -70,8 +65,8 @@ const state = reactive({
 const handleQuery = async () => {
 	state.loading = true;
 	var response = await request.get('/api/base/menu/all', { params: state.tableParams })
-	state.list = response.items.filter(_ => _.pid == null)
-	setChildren(state.list, response.items)
+	state.data = response.items.filter(_ => _.pid == null)
+	setChildren(state.data, response.items)
 	state.loading = false;
 };
 

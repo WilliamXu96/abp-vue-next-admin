@@ -220,9 +220,7 @@ const loadOrgTree = async () => {
 			state.orgData.push(element);
 		}
 	});
-
 	setChildren(state.orgData, res.items);
-
 }
 
 const setChildren = (roots, items) => {

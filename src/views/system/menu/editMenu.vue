@@ -206,11 +206,10 @@ const openDialog = (type: string, row?: any) => {
 		state.dialog.title = '修改菜单';
 		state.dialog.submitTxt = '修 改';
 	} else {
+		state.isEdit = false
 		state.dialog.title = '新增菜单';
 		state.dialog.submitTxt = '新 增';
-		state.isEdit = false
 	}
-	state.dialog.type = type;
 	state.dialog.isShowDialog = true;
 };
 // 关闭弹窗
@@ -219,15 +218,15 @@ const closeDialog = () => {
 	ruleFormRef.value.resetFields();
 };
 
-// 获取用户
-const fetchData = async (id: string) => {
-	state.ruleForm = await request.get('/api/base/menu/' + id);
-}
-
 // 取消
 const onCancel = () => {
 	closeDialog();
 };
+
+// 获取用户
+const fetchData = async (id: string) => {
+	state.ruleForm = await request.get('/api/base/menu/' + id);
+}
 // 提交
 const onSubmit = () => {
 	ruleFormRef.value.validate(async (valid: boolean) => {
