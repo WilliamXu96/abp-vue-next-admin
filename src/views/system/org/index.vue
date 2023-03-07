@@ -21,24 +21,29 @@
 				<el-card shadow="hover" :body-style="{ paddingBottom: '0' }">
 					<el-form :model="state.tableParams" ref="queryForm" :inline="true">
 						<el-form-item>
-							<el-input placeholder="搜索..." @keyup.enter="handleQuery" v-model="state.tableParams.Filter" />
+							<el-input placeholder="搜索..." @keyup.enter="handleQuery"
+								v-model="state.tableParams.Filter" />
 						</el-form-item>
 						<el-form-item>
 							<el-button type="primary" icon="ele-Search" @click="handleQuery"> 查询
 							</el-button>
-							<el-button icon="ele-Plus" @click="handleCreate" v-auth="'AbpIdentity.Users.Create'"> 新增
-							</el-button>
+							<el-button icon="ele-Plus" @click="handleCreate" v-auth="'AbpIdentity.Users.Create'"> 新增 </el-button>
 						</el-form-item>
 					</el-form>
 				</el-card>
 
 				<el-card shadow="hover" style="margin-top: 8px">
-					<el-table :data="state.userData" style="width: 100%" v-loading="state.loading" border>
+					<el-table :data="state.data" style="width: 100%" v-loading="state.loading" border>
 						<el-table-column type="selection" width="44px"></el-table-column>
-						<el-table-column prop="userName" label="用户名" sortable="custom" align="center" />
-						<el-table-column prop="organizationNames" label="所属机构" show-overflow-tooltip />
-						<el-table-column prop="email" label="邮箱" show-overflow-tooltip />
-						<el-table-column prop="phoneNumber" label="电话" show-overflow-tooltip />
+						<el-table-column prop="name" label="机构名称" sortable="custom" align="center" />
+						<el-table-column prop="fullName" label="全称" show-overflow-tooltip />
+						<el-table-column prop="categoryId" label="机构类型" show-overflow-tooltip :formatter="categoryFormat" />
+						<el-table-column prop="enabled" label="启用" show-overflow-tooltip >
+                            <template #default="scope">
+								<el-tag type="success" v-if="scope.row.enabled">是</el-tag>
+								<el-tag type="info" v-else>否</el-tag>
+							</template>
+                        </el-table-column>
 						<!-- <el-table-column label="性别" width="70" align="center" show-overflow-tooltip>
 								<template #default="scope">
 									<el-tag type="success" v-if="scope.row.sex === 1"> 男 </el-tag>
@@ -79,27 +84,27 @@
 				</el-card>
 			</el-col>
 		</el-row>
-		<EditUser ref="editUserRef" @refresh="handleQuery()" />
+		<EditOrg ref="editOrgRef" @refresh="handleQuery()" />
 	</div>
 </template>
 
 <script setup lang="ts" name="user">
 import { reactive, onMounted, ref } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
-import EditUser from '/@/views/system/user/editUser.vue';
+import EditOrg from '/@/views/system/org/editOrg.vue';
 import request from '/@/utils/request';
 
 // 定义变量内容
-const editUserRef = ref();
+const editOrgRef = ref();
 const state = reactive({
 	orgData: [],
-	userData: [],
+	data: [],
 	totalCount: 0,
 	loading: false,
 	orgFilter: '',
 	page: 1,
 	tableParams: {
-		OrganizationId: null,
+		Pid: null,
 		Filter: "",
 		Sorting: "",
 		SkipCount: 0,
@@ -133,7 +138,7 @@ const getOrgs = async (node, resolve) => {
 
 // 左侧机构树点击事件
 const handleNodeClick = async (data) => {
-	state.tableParams.OrganizationId = data.id
+	state.tableParams.Pid = data.id
 	handleQuery()
 }
 
@@ -141,31 +146,31 @@ const handleNodeClick = async (data) => {
 const handleQuery = async () => {
 	state.loading = true;
 	state.tableParams.SkipCount = (state.page - 1) * state.tableParams.MaxResultCount;
-	var response = await request.get('/api/base/user', { params: state.tableParams })
-	state.userData = response.items;
+	var response = await request.get('/api/base/orgs/all', { params: state.tableParams })
+	state.data = response.items;
 	state.totalCount = response.totalCount;
 	state.loading = false;
 };
 
 // 打开新增页面
 const handleCreate = () => {
-	editUserRef.value?.openDialog();
+	editOrgRef.value?.openDialog();
 };
 
 // 打开编辑页面
 const handleUpdate = (row: any) => {
-	editUserRef.value?.openDialog('edit', row);
+	editOrgRef.value?.openDialog('edit', row);
 };
 
 //删除用户
 const handleDelete = (row: any) => {
-	ElMessageBox.confirm(`确定删除账号：【${row.userName}】?`, '提示', {
+	ElMessageBox.confirm(`确定删除机构：【${row.name}】?`, '提示', {
 		confirmButtonText: '确定',
 		cancelButtonText: '取消',
 		type: 'warning',
 	})
 		.then(async () => {
-			await request.delete("/api/identity/users/" + row.id);
+			await request.post("/api/base/orgs/delete", [row.id]);
 			handleQuery();
 			ElMessage.success('删除成功');
 		})
@@ -182,6 +187,17 @@ const handleSizeChange = (val: number) => {
 const handleCurrentChange = (val: number) => {
 	state.page = val;
 	handleQuery();
+};
+
+const categoryFormat = (row: any, column: any) => {
+	if (row.categoryId == 1)
+		return '公司'
+	if (row.categoryId == 2)
+		return '组织'
+        if (row.categoryId == 3)
+		return '部门'
+        if (row.categoryId == 4)
+		return '供应商'
 };
 
 // 页面加载时
