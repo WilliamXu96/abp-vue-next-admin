@@ -30,10 +30,10 @@
 							</template>
 						</el-table-column>
 						<el-table-column prop="description" label="描述" show-overflow-tooltip></el-table-column>
-						<el-table-column label="操作" width="100">
+						<el-table-column label="操作" width="140" align="center">
 							<template #default="scope">
-								<el-button size="small" text type="primary" @click="handleUpdate(scope.row)">修改</el-button>
-								<el-button size="small" text type="primary" @click="handleDelete(scope.row)">删除</el-button>
+								<el-button icon="ele-Edit" size="small" text type="primary" @click="handleUpdate(scope.row)">编辑</el-button>
+								<el-button icon="ele-Delete" size="small" text type="primary" @click="handleDelete(scope.row)">删除</el-button>
 							</template>
 						</el-table-column>
 					</el-table>
